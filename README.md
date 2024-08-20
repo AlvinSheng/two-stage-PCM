@@ -28,6 +28,7 @@ Order of scripts to run:
 
 1. scripts/pkg_list.R: ensure all of the packages in this script are installed and that this script can be run.
 2. simulation_and_application_of_method.R
+  * The script will load spatial_markov_model.R, which contains met_gibbs_potts() that runs the MCMC chains for the Potts clustering model (PCM).
 
 Results in these intermediary data files:
 
@@ -38,5 +39,11 @@ Results in these intermediary data files:
 Results in this output:
 
 1. MCMC_output/model_res.rds: an object with MCMC chains (or summaries of the chains) for all the parameters in the PCM, as well as model fitting information
+
+### Running the PCM on the same simulated data, but assumming that the subjects are split into two groups
+
+In simulation_and_application_of_method.R, change lines 90 and 101 according to the comments. 
+
+Then, the function that runs the MCMC chain, met_gibbs_potts() in spatial_markov_model_group_idx.R, will assume by default that group = c(rep(1, floor(num_subj/2)), rep(2, ceiling(num_subj/2))), i.e., the first half of subjects are in group 1 and the second half are in group 2. Potts offsets will be computed separately for each group.
 
 

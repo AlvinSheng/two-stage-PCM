@@ -1,4 +1,6 @@
 
+# takes 54 minutes to run
+
 library(here)
 source(here("scripts/pkg_list.R"))
 
@@ -15,7 +17,7 @@ num_subj <- 50
 # parameter for the Potts model
 psi <- 1.29
 
-# generate about lambda1 points per grid region
+# intensity of type-1 cells and intensity ratio
 lambda1 <- 16
 prob_mat <- cbind(c(0.5, 0.5), c(0.8, 0.2)) # ratio of type 1 and type 2 cells, given columnwise. 
 
@@ -71,7 +73,7 @@ cat("The r-sequence goes from 0 to", rmax, "(inclusive) with", nr, "r-values in 
 # for the getNeighbors() function
 source(here("scripts/getNeighbors.R"))
 
-# Simulating the data, calculating local pcfs
+# Simulating the data
 source(here("scripts/sim_helper_fns.R"))
 
 source(here("scripts", paste0("monte_carlo_sim_M", M, ".R")), local = T)
@@ -80,12 +82,12 @@ saveRDS(regime_spp, file = here("intermediary_data", paste0("regime_spp.rds")))
 
 source(here("scripts/real_data_helper_fns.R"))
 
+# calculating local intensities and pcfs, perform principal component analysis to get the output of the first stage
 source(here("scripts/calculate_aggregated_LISAs.R"), local = T)
 saveRDS(regime_pcfs_smoothed, file = here("intermediary_data", paste0("pcfs_smoothed.rds")))
 
-# Applying the methods on the local pcfs 
 source(here("scripts/clustering_algorithm_util.R"))
-source(here("scripts/spatial_markov_model.R"))
+source(here("scripts/spatial_markov_model.R")) # In the case where subjects are split into multiple groups, replace with source(here("scripts/spatial_markov_model_group_idx.R"))
 
 # percentage of variance PCA should account for 
 pca_cutoff <- 0.80
@@ -94,9 +96,11 @@ finer_dim <- NULL
 
 label_unswitch <- T
 
+# Applying the PCM to the first stage output
 source(here("scripts/methods_runthru.R"), local = T)
-saveRDS(my_res_pcfs, file = here("MCMC_output", paste0("model_res.rds")))
+saveRDS(my_res_pcfs, file = here("MCMC_output", paste0("model_res.rds"))) # In the case where subjects are split into multiple groups, my_res_pcfs is saved as model_res_group_idx.rds
 
+# Applying the competing methods to the first stage output
 do_pcm0 <- T
 source(here("scripts/comparison_methods_runthru.R"), local = T)
 
