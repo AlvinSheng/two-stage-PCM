@@ -10,6 +10,8 @@ The mIF images were obtained from patients at the University of Michigan Pancrea
 
 ## Key Scripts and Data
 
+R Version 4.3.0 (Already Tomorrow) was used in writing and running the code.
+
 ### For evaluating the normalizing constant (running this step is optional; output is already generated)
 
 Order of scripts to run:
